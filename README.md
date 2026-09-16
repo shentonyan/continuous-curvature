@@ -6,8 +6,9 @@ Two small tools about the same idea: **where curvature jumps, and what it costs 
 |---|---|
 | [`squircle.py`](squircle.py) | Reproduces Apple's "continuous corner" from closed form, and shows that it is G1, not G2 |
 | [`curvcont.py`](curvcont.py) | Extracts a glyph from a `.ttf` / `.otf`, draws its curvature comb, and solves the outline to G2 |
+| [`index.html`](index.html) | An interactive workbench for Part 1 — **[open the live demo](https://shentonyan.github.io/continuous-curvature/)** |
 
-Both are dependency-light, single-file, and print numbers you can check.
+Both scripts are dependency-light, single-file, and print numbers you can check.
 
 ---
 
@@ -35,6 +36,13 @@ a = 2b
 
 The arc sweeps `90°(1 − s)`. Apple measures `p = 1.528665 r`, i.e. **`s = 0.528665`**.
 The "60%" preset in Figma's UI is an approximation of that value.
+
+![Three corner models compared: outlines, the curvature plot, and the same radius at three smoothing values](figures/squircle-comparison.png)
+
+*Left:* the three corners at the same `r`, with the Bézier control polygon and the seams `A₀`, `A₁`.
+*Middle:* κ along the arc length — the plain corner's vertical jump at the seam, against the
+continuous corner's ramp (and its residual ×1.494 step). *Right:* how the same radius reads at
+`s = 0`, Apple's `s = 0.5287`, and fully smoothed `s = 1`.
 
 ### Three identities the code verifies numerically
 
@@ -104,6 +112,10 @@ corner_params(48, APPLE_SMOOTHING)     # every derived quantity
 curvature_ratio(0.6)                   # → 1.4704
 ```
 
+Or just open the **[live workbench](https://shentonyan.github.io/continuous-curvature/)**
+(`index.html`, no build step, no dependencies): drag `r` and `s`, watch the curvature comb and the
+superellipse fit update, and copy the generated SVG path, CSS, SwiftUI or JS straight out.
+
 On Apple platforms you do not need any of this — `style: .continuous` is built in. The value
 here is for the web, Canvas, and anywhere you want smoothing as a free parameter.
 
@@ -156,6 +168,16 @@ per unknown:       how far it moved from its original value (regularisation)
 ```
 
 Solved with `scipy.optimize.least_squares`.
+
+![DejaVu Serif S: curvature combs before and after, a magnifier on the worst node, and the kappa plot](figures/dejavu-serif-S.png)
+
+![DejaVu Serif a: the same four panels](figures/dejavu-serif-a.png)
+
+Red is the original, green is the solved outline. The comb makes the defect visible: the original
+envelope has steps and kinks at the nodes, the solved one runs smooth. Black squares mark the
+corners the tool detected and deliberately left alone. In the κ(s) panel the two curves sit almost
+on top of each other — that is the curvature anchor doing its job, removing the jumps without
+rewriting the designer's curvature profile.
 
 ### Results — DejaVu Serif, default settings
 
@@ -211,6 +233,17 @@ separately in the report. The principled fix is to insert a curvature ramp at th
 precisely the construction in Part 1. The two halves of this repo are the same problem.
 
 ---
+
+## The workbench
+
+[`index.html`](index.html) is a single self-contained page — the only external request is the
+Google Fonts stylesheet. It runs from a `file://` URL just as happily as from a server, and it is
+what GitHub Pages serves at
+**https://shentonyan.github.io/continuous-curvature/**
+(Settings → Pages → Deploy from a branch → `main` / root).
+
+It recomputes everything in the browser from the same closed form as `squircle.py`, including the
+golden-section search for the best-fit superellipse exponent.
 
 ## Install
 
