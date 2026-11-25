@@ -67,9 +67,12 @@ continuous corner's ramp (and its residual ×1.494 step). *Right:* how the same 
 
 ### The finding: it is G1, not G2
 
-That last expression is **never 1**. At Apple's `s = 0.5287` it equals **1.4936** — curvature
-still jumps by about 1.49× at the Bézier/arc seam. It bottoms out at 1.295 as `s → 1` and grows
-without bound as `s → 0`.
+For `0 < s < 1`, the expression is **greater than 1**. At Apple's `s = 0.5287`,
+`κ_end` is about **1.4936** times the arc curvature. The ratio decreases to about `1.2952`
+as `s → 1⁻`, and tends to the finite limit `(32/π + 4)/9 ≈ 1.5762` as `s → 0⁺`.
+To see this, use `sin β − tan(β/2) cos β = tan(β/2)` and `β = πs/4` to rewrite
+it as `(4/9) cos²(β/2) · [1 + s cot(β/2)]`. At `s = 0` the Bézier segment
+collapses, so there is no Bézier/arc seam to compare.
 
 So "continuous curvature" is a marketing term, not a geometric claim. What the construction
 genuinely achieves is worth more than the name suggests: it moves the discontinuity **off the
