@@ -83,11 +83,12 @@ Fixing the semi-axis at `A = p = 1.5287 r` and fitting only the exponent:
 n = 3.399,   rms residual = 0.0073 r   (0.48% of p)
 ```
 
-CSS's `corner-shape` takes `log2(exponent)`, so the closest CSS equivalent is:
+For example, with `r = 48px`, the fitted semi-axis is `p = 1.528665 × 48px ≈ 73.38px`.
+Use that length as `border-radius`. CSS's `corner-shape` takes `log2(exponent)`:
 
 ```css
 .apple-ish {
-  border-radius: 1.5287 * r;
+  border-radius: 73.38px;
   corner-shape: superellipse(1.765);   /* exponent 3.399 */
 }
 ```
